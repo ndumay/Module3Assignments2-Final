@@ -1,0 +1,65 @@
+# Trying my best a learn how to use GitHub and Jupyter Notebooks. 
+# Read that an appendix should be created for use of ChatGPT or other AI Assistance.
+# I want to make sure that I am following the rules. Please advise if I should be doing anything differently.
+
+
+# BU AI Use Policy: https://www.bu.edu/cds-faculty/culture-community/gaia-policy/
+# BU APA Formatted AI Use Citation: "OpenAI. (2024). Transcript of conversation with problem-solving solutions. Unpublished interaction transcript. Retrieved from OpenAI’s ChatGPT platform. In accordance with Boston University GAIA policy."
+
+
+# BU AI Use Citation Requirements:
+# b) ChatGPT (Subscription) 
+# c) Primarily will be using ChatGPT to prime myself for how to solution for problems within an assignment, what libraries most help with solving the problem, and then walking me through the steps to understanding how to get to the solution. ChatGPT, is helping me bridge a gap in my understand of converting course concepts to code;
+# d) AI is primarily being used as a preceptor that translates teachings information into to practical development knowledge to better understand the steps to the solution, learn optimal development to a given problem to form wisdom;
+
+# Initial Dialog: 
+# Asked for help with a homework assignment using GitHub Codespaces, Python, and Jupyter Notebooks. 
+# Provided libraries to be used and mentioned that I would need to cite the use of ChatGPT in the appendix.
+# Requested help in solving problems seaking step by step instructional breakdown for learning for 10 questions.
+
+
+# a) the entire exchange, highlighting the most relevant sections;
+
+# Problem Statements and Solution Steps Summary with Detailed Explanations
+
+# Summary of Data Science Homework: Linear Regression & Feature Engineering
+
+# 1. Load the California Housing Dataset
+# - Used sklearn’s fetch_california_housing() to load data into a DataFrame.
+
+# 2. Feature Transformations Applied:
+# - Log Transform (2.1): log(MedHouseVal) to reduce variance.
+# - Log Feature (2.2): log(MedInc) to normalize feature distribution.
+# - Polynomial Feature (2.3): Population^2 to capture non-linearity.
+# - Interaction Feature (2.4): AveRooms * AveBedrms to test feature interactions.
+
+# 3. Train Multiple Regression Models:
+# - Baseline Model (No transformations)
+# - Models with each transformation separately
+# - All Transformations Combined
+
+# 4. Evaluate Model Performance:
+# - Computed Mean Squared Error (MSE) and R² Score for each model.
+# - Found Log Transform (2.1) significantly improved performance.
+# - Polynomial and Interaction Features did not improve MSE.
+
+# 5. Results Summary:
+# - Best MSE: 0.1222 (Log Target & All Transformations)
+# - Best R² Score: 0.6229
+# - Baseline MSE: 0.5343, R²: 0.5929 (worst performance)
+
+# 6. Answered Graded Questions:
+# - Assigned MSE for Baseline Model (0.5343).
+# - Assigned MSE for Polynomial Feature Model (0.5343).
+# - Assigned R² Score for Log Target Model (0.6229).
+# - Assigned Best R² Score found (0.6229).
+# - Estimated hours spent (user-defined integer).
+
+# 7. Validation Performed:
+# - Extracted and validated MSE values using assertions.
+# - Ensured correctness by comparing stored results with expected values.
+
+# Conclusion:
+# - Log-transforming the target was the most effective technique.
+# - Other transformations alone did not improve model performance.
+# - Combining all transformations yielded similar results to just using Log Target.
