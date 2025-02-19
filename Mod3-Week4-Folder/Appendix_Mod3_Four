@@ -1,0 +1,146 @@
+# Appendix: Data Science Homework - Cross-Validation, Null Handling, and Model Evaluation
+
+# ------------------------------------------------------------------------------------
+# Overview
+# ------------------------------------------------------------------------------------
+# This appendix summarizes the steps, methods, and rationale used in handling null values, 
+# performing feature transformations, and applying cross-validation strategies for linear 
+# regression on the Ames Housing dataset.
+
+# ------------------------------------------------------------------------------------
+# 1. Handling Null Values
+# ------------------------------------------------------------------------------------
+
+# Null Value Strategies:
+# - Removal:
+#   - Features with a high percentage of missing values (> max_nulls threshold) were dropped.
+# - Imputation:
+#   - Categorical Features: Replaced missing values using the most frequent category 
+#     with SimpleImputer(strategy='most_frequent').
+#   - Numeric Features: Used median imputation with SimpleImputer(strategy='median').
+
+# Code Highlights:
+# Import necessary library
+# from sklearn.impute import SimpleImputer
+
+# Categorical imputation
+# cat_imputer = SimpleImputer(strategy='most_frequent')
+# df_clean[categorical_features] = cat_imputer.fit_transform(df_clean[categorical_features])
+
+# Numeric imputation
+# num_imputer = SimpleImputer(strategy='median')
+# df_clean[numeric_features] = num_imputer.fit_transform(df_clean[numeric_features])
+
+# ------------------------------------------------------------------------------------
+# 2. Feature Encoding
+# ------------------------------------------------------------------------------------
+
+# Ordinal Encoding for Categorical Features:
+# - Used OrdinalEncoder to convert string categories into numeric values.
+# - Converted the encoded data back to a DataFrame to retain column names and indices.
+
+# Code Example:
+# from sklearn.preprocessing import OrdinalEncoder
+
+# encoder = OrdinalEncoder()
+# encoded_cats = encoder.fit_transform(df_clean[categorical_features])
+# encoded_cats_df = pd.DataFrame(encoded_cats, columns=categorical_features, index=df_clean.index)
+# df_clean[categorical_features] = encoded_cats_df
+
+# ------------------------------------------------------------------------------------
+# 3. Cross-Validation and Model Training
+# ------------------------------------------------------------------------------------
+
+# Methods Used:
+# - 5-Fold Cross-Validation: Baseline model evaluation with a single 5-fold split.
+# - Repeated 5-Fold Cross-Validation: More stable estimates by repeating the 5-fold process 100 times.
+# - Leave-One-Out Cross-Validation (LOOCV): Maximum variance reduction, but computationally intensive.
+
+# Code Example:
+# from sklearn.model_selection import train_test_split, cross_val_score, RepeatedKFold, LeaveOneOut
+# from sklearn.linear_model import LinearRegression
+# from sklearn.metrics import mean_squared_error
+# import numpy as np
+
+# Train-test split
+# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# model = LinearRegression()
+
+# 5-Fold CV
+# cv_scores = cross_val_score(model, X_train, y_train, cv=5, scoring='neg_mean_squared_error', n_jobs=-1)
+# mean_cv_mse = -cv_scores.mean()
+
+# Repeated 5-Fold CV
+# rkf = RepeatedKFold(n_splits=5, n_repeats=100, random_state=42)
+# repeated_cv_scores = cross_val_score(model, X_train, y_train, cv=rkf, scoring='neg_mean_squared_error', n_jobs=-1)
+# mean_repeated_cv_mse = -repeated_cv_scores.mean()
+
+# Leave-One-Out CV
+# loo = LeaveOneOut()
+# loo_cv_scores = cross_val_score(model, X_train, y_train, cv=loo, scoring='neg_mean_squared_error', n_jobs=-1)
+# mean_loo_cv_mse = -loo_cv_scores.mean()
+
+# Test MSE
+# model.fit(X_train, y_train)
+# test_mse = mean_squared_error(y_test, model.predict(X_test))
+
+# ------------------------------------------------------------------------------------
+# 4. Results and RMSE Comparison
+# ------------------------------------------------------------------------------------
+
+# To interpret the results, RMSE values (square roots of MSE) were computed:
+
+# import pandas as pd
+
+# rmse_5fold = np.sqrt(mean_cv_mse)
+# rmse_repeated_5fold = np.sqrt(mean_repeated_cv_mse)
+# rmse_loo = np.sqrt(mean_loo_cv_mse)
+# rmse_test = np.sqrt(test_mse)
+
+# Create a DataFrame to compare RMSE values
+# rmse_df = pd.DataFrame({
+#     'CV Strategy': ['5-Fold CV', 'Repeated 5-Fold CV', 'Leave-One-Out CV', 'Test Set'],
+#     'RMSE ($)': [rmse_5fold, rmse_repeated_5fold, rmse_loo, rmse_test]
+# })
+
+# Format RMSE as currency
+# rmse_df['RMSE ($)'] = rmse_df['RMSE ($)'].apply(lambda x: f"${x:,.2f}")
+# print(rmse_df.to_string(index=False))
+
+# Results Interpretation:
+# - Repeated 5-Fold CV produced the RMSE closest to the test set RMSE, providing the most reliable generalization performance.
+# - Higher K values in K-Fold CV improved accuracy but increased computational costs.
+# - LOOCV minimized bias but was time-consuming and computationally heavy.
+
+# ------------------------------------------------------------------------------------
+# 5. Optional Exploration
+# ------------------------------------------------------------------------------------
+
+# Varying K in K-Fold CV:
+# from sklearn.model_selection import KFold
+
+# k_values = [3, 5, 10, 15]
+# for k in k_values:
+#     kf = KFold(n_splits=k, shuffle=True, random_state=42)
+#     scores = cross_val_score(model, X_train, y_train, cv=kf, scoring='neg_mean_squared_error', n_jobs=-1)
+#     print(f"K={k} | RMSE: ${np.sqrt(-scores.mean()):,.2f}")
+
+# Varying K and Repeats in Repeated K-Fold CV:
+# repeats = [10, 50, 100]
+# for k in [5, 10]:
+#     for repeat in repeats:
+#         rkf = RepeatedKFold(n_splits=k, n_repeats=repeat, random_state=42)
+#         scores = cross_val_score(model, X_train, y_train, cv=rkf, scoring='neg_mean_squared_error', n_jobs=-1)
+#         print(f"K={k}, Repeats={repeat} | RMSE: ${np.sqrt(-scores.mean()):,.2f}")
+
+# ------------------------------------------------------------------------------------
+# Conclusion
+# ------------------------------------------------------------------------------------
+# - Best Strategy: Repeated 5-Fold CV (with 100 repeats) offered the best balance of reliability and computational efficiency.
+# - K-Fold CV with 10 folds is recommended when computational resources are limited.
+# - LOOCV, while theoretically optimal, is often impractical for larger datasets.
+# - Repeated K-Fold provided more stable estimates compared to single-run K-Fold CV.
+
+# ------------------------------------------------------------------------------------
+# End of Appendix
+# ------------------------------------------------------------------------------------
