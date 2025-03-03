@@ -1,0 +1,128 @@
+# Trying my best a learn how to use GitHub and Jupyter Notebooks. 
+# Read that an appendix should be created for use of ChatGPT or other AI Assistance.
+# I want to make sure that I am following the rules. Please advise if I should be doing anything differently.
+
+
+# BU AI Use Policy: https://www.bu.edu/cds-faculty/culture-community/gaia-policy/
+# BU APA Formatted AI Use Citation: "OpenAI. (2024). Transcript of conversation with problem-solving solutions. Unpublished interaction transcript. Retrieved from OpenAI’s ChatGPT platform. In accordance with Boston University GAIA policy."
+
+
+# BU AI Use Citation Requirements:
+# b) ChatGPT (Subscription) 
+# c) Primarily will be using ChatGPT to prime myself for how to solution for problems within an assignment, what libraries most help with solving the problem, and then walking me through the steps to understanding how to get to the solution. ChatGPT, is helping me bridge a gap in my understand of converting course concepts to code;
+# d) AI is primarily being used as a preceptor that translates teachings information into to practical development knowledge to better understand the steps to the solution, learn optimal development to a given problem to form wisdom;
+
+# Initial Dialog: 
+# Asked for help with a homework assignment using GitHub Codespaces, Python, and Jupyter Notebooks. 
+# Provided libraries to be used and mentioned that I would need to cite the use of ChatGPT in the appendix.
+# Requested help in solving problems seaking step by step instructional breakdown for learning for 10 questions.
+
+
+# a) the entire exchange, highlighting the most relevant sections;
+
+# Problem Statements and Solution Steps Summary with Detailed Explanations
+
+# **Transcript Summary**
+
+# Summary of Decision Tree Model Optimization Discussion
+
+# Step 1: Understanding the Problem
+# Discussed how to fine-tune a DecisionTreeRegressor using cross-validation 
+# and parameter tuning to improve model performance.
+
+# Step 2: Establishing a Baseline
+# Used a function `run_decision_tree_regressor` to evaluate the baseline model's performance.
+# Emphasized the importance of cross-validated RMSE as the evaluation metric.
+
+# Step 3: Exploring Key Hyperparameters
+# Examined `max_depth`, `max_leaf_nodes`, and `min_samples_split` to understand their impact on RMSE.
+# Used iterative tuning for each parameter independently before combining them.
+
+# Step 4: Implementing Grid Search with RepeatedKFold
+# Applied `GridSearchCV` for systematic hyperparameter tuning.
+# Introduced `RepeatedKFold(n_splits=5, n_repeats=3)` to improve validation stability.
+
+# Step 5: Optimizing Hyperparameter Ranges
+# Rather than searching over large parameter spaces, refined the search based on insights 
+# from previous iterations to eliminate unnecessary computations.
+
+# Step 6: Debugging Common Errors
+# Addressed:
+# - `ValueError: Parameter grid for 'min_samples_split' needs to be non-empty`
+# - `TypeError: 'numpy.float64' object cannot be interpreted as an integer`
+# Solutions included validating parameters, ensuring integer values, and providing default ranges.
+
+# Step 7: Finalizing and Evaluating the Model
+# Stored the best hyperparameters found as `a4a = (best_max_depth, best_max_features, best_min_samples_split)`
+# Stored the best RMSE score as `a4b = best_rmse`
+
+# Step 8: Implementation of Baseline Model Testing
+# Wrapped the DecisionTreeRegressor in a function for reproducibility.
+# Included RepeatedKFold cross-validation for improved variance reduction.
+
+# Step 9: Iterative Hyperparameter Tuning
+# Tested `max_depth`, `max_leaf_nodes`, and `min_samples_split` in isolation.
+# Used visualizations to analyze the RMSE trends.
+
+# Step 10: Debugging Code Execution Errors
+# Encountered and resolved invalid parameter errors:
+# - `max_leaf_nodes` must be `>= 2` or `None`
+# - `max_features` must be `>= 1` or `None`
+# - `min_samples_split` must be a non-empty sequence
+
+# Final Code Implementation:
+# Define the refined parameter grid using validated integer values
+# Ensure all values are integers before passing them to range()
+# param_grid = {
+#     "max_depth": [None] + list(range(max(2, int(a1b) - 2), min(18, int(a1b) + 3))),
+#     "max_features": [None] + list(range(max(1, int(a2) - 2), min(X_train.shape[1], int(a2) + 3))),
+#     "min_samples_split": list(range(max(2, int(a3) - 2), min(21, int(a3) + 3)))
+# }
+
+# Initialize Decision Tree Regressor with a fixed random state for reproducibility
+# decision_tree_model = DecisionTreeRegressor(random_state=42)
+
+# Define cross-validation strategy using RepeatedKFold for stability
+# cv = RepeatedKFold(n_splits=5, n_repeats=3, random_state=42)
+
+# Set up GridSearchCV to systematically evaluate parameter combinations
+# grid_search = GridSearchCV(
+#     estimator=decision_tree_model,
+#     param_grid=param_grid,
+#     scoring="neg_mean_squared_error",
+#     cv=cv,
+#     n_jobs=-1,
+#     verbose=1
+# )
+
+# Perform Grid Search on the training dataset
+# grid_search.fit(X_train, y_train)
+
+# Extract results into a DataFrame for analysis
+# results_df = pd.DataFrame(grid_search.cv_results_)
+
+# Compute RMSE from negative MSE and sort by lowest RMSE
+# results_df["RMSE"] = np.sqrt(-results_df["mean_test_score"])
+# results_df_sorted = results_df.sort_values(by="RMSE")
+
+# Display the top 10 hyperparameter combinations
+# top_10_results = results_df_sorted[["param_max_depth", "param_max_features", "param_min_samples_split", "RMSE"]].head(10)
+# print(top_10_results)
+
+# Extract the best parameter combination from the top results
+# best_row = top_10_results.iloc[0]
+# a4a = (best_row["param_max_depth"], best_row["param_max_features"], best_row["param_min_samples_split"])
+
+# Store the best RMSE score for evaluation
+# a4b = best_row["RMSE"]
+
+# Print the final results for review
+# print(f'a4a = {a4a}')
+# print(f'a4b = ${a4b:,.2f}')
+
+# Conclusion:
+# The final implementation refines Decision Tree parameters using systematic tuning.
+# Lessons include:
+# - Importance of incremental parameter tuning
+# - Efficient hyperparameter search strategies
+# - Debugging common ML tuning issues
