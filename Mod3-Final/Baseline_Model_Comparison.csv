@@ -1,8 +1,4 @@
-Model,Mean_RMSE,StdDev_RMSE
-Bagging,182000.04053820256,1013.6433243555375
-Random_Forest,182007.98436470967,935.2946891935
-Gradient_Boosting,189464.0039619151,1021.7808342224163
-Linear_Regression,196956.98785063354,3039.27370810358
-Lasso_Regression,196957.1815096702,3039.6099052318255
-Ridge_Regression,196957.5029542527,3040.125906829536
-Decision_Tree,246198.42892926032,1933.2489263827492
+Model,Best Params,CV RMSE Mean,CV RMSE Std,Test RMSE
+Bagging,"{'model__max_samples': 0.7, 'model__n_estimators': 20}",191592.5780230017,1587.3050528194099,192923.54809813751
+RandomForest,"{'model__max_depth': 20, 'model__min_samples_split': 5, 'model__n_estimators': 200}",177323.51113097736,1703.2855073036537,178373.06472128205
+GradientBoosting,"{'model__learning_rate': 0.1, 'model__max_depth': 5, 'model__n_estimators': 200}",175391.8188332655,1889.5861480890048,177324.37144573376
